@@ -14,6 +14,11 @@
 #   This means any rules not created using this module's defined type
 #   will be removed.
 #
+# [*ignored_files_on_purge*]
+#   Array containing files that should not be purged when manage_audit_files is set to true. 
+#   See puppet's file ressource and ignore parameter for possible globbing options.
+#   When manage_audit_files is false, this parameter has no meaning.
+#
 # [*rules_file*]
 #   The file that Audit rules should be added to.
 #
@@ -364,6 +369,7 @@ class auditd (
   # Variables for Audit files
   $rules_file              = $::auditd::params::rules_file,
   $manage_audit_files      = $::auditd::params::manage_audit_files,
+  $ignored_files_on_purge  = $::auditd::params::ignored_files_on_purge,
   $buffer_size             = $::auditd::params::buffer_size,
 
   # Audisp main config variables
@@ -491,6 +497,7 @@ class auditd (
       mode    => '0750',
       recurse => true,
       purge   => true,
+      ignore  => $ignored_files_on_purge,
       require => Package[$package_name],
     }
   }

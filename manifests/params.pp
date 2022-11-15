@@ -152,4 +152,7 @@ class auditd::params {
   $manage_service         = true
   $service_ensure         = 'running'
   $service_enable         = true
+
+  # LHM specific - leave out secure workload agent file on purge
+  $ignored_files_on_purge = []
 }
