@@ -1,5 +1,4 @@
 class auditd::params {
-
   # OS specific variables.
   case $facts['os']['family'] {
     'Suse': {
@@ -72,7 +71,7 @@ class auditd::params {
   $freq                    = '20'
   $num_logs                = '5'
   $name_format             = 'none'
-  $admin                   = $facts['hostname']
+  $admin                   = $facts['networking']['hostname']
   $max_log_file            = '6'
   $max_log_file_action     = 'rotate'
   $space_left              = '75'

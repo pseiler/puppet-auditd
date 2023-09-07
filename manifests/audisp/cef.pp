@@ -2,7 +2,6 @@ class auditd::audisp::cef (
   #local5 is 21<<3
   $facility = 168,
 ) {
-
   package { 'audisp-cef':
     ensure => 'present',
   }
@@ -18,5 +17,4 @@ class auditd::audisp::cef (
     content => template("${module_name}/audisp-cef.conf.erb"),
     notify  => Service['auditd'],
   }
-
 }
