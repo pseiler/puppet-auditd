@@ -2,27 +2,6 @@ class auditd::params {
 
   # OS specific variables.
   case $facts['os']['family'] {
-    'Debian': {
-      $package_name       = 'auditd'
-      $audisp_package     = 'audispd-plugins'
-      $manage_audit_files = false
-      $rules_file         = '/etc/audit/rules.d/audit.rules'
-      $has_audisp_config  = true
-      $audisp_dir         = '/etc/audisp'
-      $disp_qos           = 'lossy'
-      $dispatcher         = '/sbin/audispd'
-
-      case $::lsbmajdistrelease {
-        '8': {
-          $service_restart = '/bin/systemctl restart auditd'
-          $service_stop    = '/bin/systemctl stop auditd'
-        }
-        default: {
-          $service_restart = '/etc/init.d/auditd restart'
-          $service_stop    = '/etc/init.d/auditd stop'
-        }
-      }
-    }
     'Suse': {
       $package_name = 'audit'
       $audisp_dir   = '/etc/audisp'
@@ -78,30 +57,6 @@ class auditd::params {
         $service_stop    = '/etc/init.d/auditd stop'
       }
     }
-    'Archlinux': {
-      $package_name       = 'audit'
-      $audisp_package     = 'audit'
-      $manage_audit_files = false
-      $rules_file         = '/etc/audit/audit.rules'
-      $service_restart    = '/usr/bin/kill -s SIGHUP $(cat /var/run/auditd.pid)'
-      $service_stop       = '/usr/bin/kill -s SIGTERM $(cat /var/run/auditd.pid)'
-      $has_audisp_config  = true
-      $audisp_dir         = '/etc/audisp'
-      $disp_qos           = undef
-      $dispatcher         = undef
-    }
-    'Gentoo': {
-      $package_name       = 'audit'
-      $audisp_package     = 'audit'
-      $manage_audit_files = false
-      $rules_file         = '/etc/audit/audit.rules'
-      $service_restart    = '/etc/init.d/auditd restart'
-      $service_stop       = '/etc/init.d/auditd stop'
-      $has_audisp_config  = true
-      $audisp_dir         = '/etc/audisp'
-      $disp_qos           = undef
-      $dispatcher         = undef
-    }
     default: {
       fail("${facts['os']['family']} is not supported by auditd")
     }
@@ -117,7 +72,7 @@ class auditd::params {
   $freq                    = '20'
   $num_logs                = '5'
   $name_format             = 'none'
-  $admin                   = $::hostname
+  $admin                   = $facts['hostname']
   $max_log_file            = '6'
   $max_log_file_action     = 'rotate'
   $space_left              = '75'
