@@ -21,73 +21,41 @@
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "7",
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "SLES",
       "operatingsystemrelease": [
-        "10",
-        "11",
-        "12"
+        "12",
+        "15"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "7",
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "7",
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "Amazon"
-    },
-    {
-      "operatingsystem": "Fedora",
-      "operatingsystemrelease": [
-        "22",
-        "23"
-      ]
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [
-        "12.04",
-        "14.04",
-        "16.04"
-      ]
-    },
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
-    },
-    {
-      "operatingsystem": "Archlinux"
-    },
-    {
-      "operatingsystem": "Gentoo"
     }
   ],
   "requirements": [
