@@ -1,20 +1,20 @@
 {
-  "name": "kemra102-auditd",
+  "name": "pseiler-auditd",
   "version": "2.2.0",
   "author": "Danny Roberts",
   "summary": "Manage the audit daemon and it's rules.",
   "license": "BSD-2-Clause",
-  "source": "https://github.com/kemra102/puppet-auditd",
-  "project_page": "https://github.com/kemra102/puppet-auditd",
-  "issues_url": "https://github.com/kemra102/puppet-auditd/issues",
+  "source": "https://github.com/pseiler/puppet-auditd",
+  "project_page": "https://github.com/pseiler/puppet-auditd",
+  "issues_url": "https://github.com/pseiler/puppet-auditd/issues",
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 4.6.0 < 5.0.0"
+      "version_requirement": ">= 4.6.0 < 8.0.0"
     },
     {
       "name": "puppetlabs-concat",
-      "version_requirement": ">= 1.1.0 < 3.0.0"
+      "version_requirement": ">= 1.1.0"
     }
   ],
   "operatingsystem_support": [
@@ -93,7 +93,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.6.0"
+      "version_requirement": ">= 4.6.0 < 7.0.0"
     }
   ],
   "tags": [
@@ -105,7 +105,7 @@
     "logging",
     "logs"
   ],
-  "pdk-version": "1.17.0",
-  "template-url": "https://github.com/puppetlabs/pdk-templates#1.17.0",
-  "template-ref": "tags/1.17.0-0-gd3a4319"
+  "pdk-version": "3.0.0",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#3.0.0",
+  "template-ref": "tags/3.0.0-0-g5bfc1c0"
 }
