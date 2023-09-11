@@ -343,23 +343,26 @@ class auditd (
   Enum['none', 'incremental', 'incremental_async', 'data', 'sync'] $flush = $auditd::params::flush,
   Integer $freq                          = $auditd::params::freq,
   Integer $num_logs                      = $auditd::params::num_logs,
-  Enum['lossy','lossless'] $disp_qos     = $auditd::params::disp_qos,
+  Optional[Enum['lossy','lossless']] $disp_qos = $auditd::params::disp_qos,
   Optional[String] $dispatcher           = $auditd::params::dispatcher,
   Enum['none','hostname','fqd','numeric','user'] $name_format = $auditd::params::name_format,
-  $admin                                 = $auditd::params::admin,
-  $max_log_file                          = $auditd::params::max_log_file,
-  $max_log_file_action                   = $auditd::params::max_log_file_action,
-  $space_left                            = $auditd::params::space_left,
-  $space_left_action                     = $auditd::params::space_left_action,
-  $action_mail_acct                      = $auditd::params::action_mail_acct,
-  $admin_space_left                      = $auditd::params::admin_space_left,
-  $admin_space_left_action               = $auditd::params::admin_space_left_action,
-  $disk_full_action                      = $auditd::params::disk_full_action,
-  $disk_error_action                     = $auditd::params::disk_error_action,
-  $tcp_listen_port                       = $auditd::params::tcp_listen_port,
-  $tcp_listen_queue                      = $auditd::params::tcp_listen_queue,
-  $tcp_max_per_addr                      = $auditd::params::tcp_max_per_addr,
-  $tcp_client_ports                      = $auditd::params::tcp_client_ports,
+  String $admin                          = $auditd::params::admin,
+  Integer $max_log_file                  = $auditd::params::max_log_file,
+  Enum['ignore','syslog','suspend','rotate','keep_logs'] $max_log_file_action = $auditd::params::max_log_file_action,
+  Integer $space_left                    = $auditd::params::space_left,
+  Enum['ignore','syslog','email','suspend','single','halt'] $space_left_action = $auditd::params::space_left_action,
+  String $action_mail_acct               = $auditd::params::action_mail_acct,
+  Integer $admin_space_left              = $auditd::params::admin_space_left,
+  Enum['ignore','syslog','email','suspend','single','halt'] $admin_space_left_action = $auditd::params::admin_space_left_action,
+  Enum['ignore','syslog','suspend','single','halt'] $disk_full_action = $auditd::params::disk_full_action,
+  Enum['ignore','syslog','suspend','single','halt'] $disk_error_action = $auditd::params::disk_error_action,
+  Optional[String] $tcp_listen_port      = $auditd::params::tcp_listen_port,
+  Integer $tcp_listen_queue              = $auditd::params::tcp_listen_queue,
+  Integer[1,16] $tcp_max_per_addr        = $auditd::params::tcp_max_per_addr,
+  # this line is awful. It's a optional parameter which can be an Integer or an Array that contains two Integers at max.
+  # also these Integers (with or without the parent array) also have a min and a max value. The Array also can store two
+  # Integers at max
+  Optional[Variant[Integer[1,65535],Array[Integer[1,65535],1,2]]] $tcp_client_ports = $auditd::params::tcp_client_ports,
   $tcp_client_max_idle                   = $auditd::params::tcp_client_max_idle,
   $enable_krb5                           = $auditd::params::enable_krb5,
   $krb5_principal                        = $auditd::params::krb5_principal,
@@ -425,6 +428,9 @@ class auditd (
   validate_re($space_left_action, '^(ignore|syslog|email|exec|suspend|single|halt)$',
   "${space_left_action} is not supported for space_left_action. Allowed values are 'ignore', 'syslog', 'email', 'exec', 'suspend', 'single' and 'halt'.")
   validate_string($action_mail_acct)
+  if $action_mail_acct !~ /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ {
+    fail("Parameter error: E-Mail address \"$action_mail_acct\" is not valid.")
+  }
   validate_integer($admin_space_left)
   validate_re($admin_space_left_action, '^(ignore|syslog|email|exec|suspend|single|halt)$',
   "${admin_space_left_action} is not supported for admin_space_left_action. Allowed values are 'ignore', 'syslog', 'email', 'exec', 'suspend', 'single' and 'halt'.")
@@ -438,9 +444,6 @@ class auditd (
   validate_integer($tcp_listen_queue)
   if $tcp_max_per_addr != undef {
     validate_integer($tcp_max_per_addr)
-  }
-  if $tcp_client_ports != undef {
-    validate_string($tcp_client_ports)
   }
   validate_integer($tcp_client_max_idle)
   validate_re($enable_krb5, '^(yes|no)$',

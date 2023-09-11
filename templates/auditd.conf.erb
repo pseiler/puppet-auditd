@@ -36,7 +36,11 @@ tcp_listen_queue = <%= @tcp_listen_queue %>
 tcp_max_per_addr = <%= @tcp_max_per_addr %>
 <% end -%>
 <% unless @tcp_client_ports.nil? -%>
+<% if @tcp_client_ports.is_a? Array -%>
+tcp_client_ports = <%= @tcp_client_ports.join('/') %>
+<% else -%>
 tcp_client_ports = <%= @tcp_client_ports %>
+<% end -%>
 <% end -%>
 tcp_client_max_idle = <%= @tcp_client_max_idle %>
 enable_krb5 = <%= @enable_krb5 %>
