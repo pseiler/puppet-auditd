@@ -5,7 +5,7 @@ log_file = <%= @log_file %>
 log_format = <%= @log_format %>
 log_group = <%= @log_group %>
 <% unless @write_logs.nil? -%>
-write_logs = <%= @write_logs %>
+write_logs = <%= scope.call_function('auditd::bool2yesno', [@write_logs]) %>
 <% end -%>
 priority_boost = <%= @priority_boost %>
 flush = <%= @flush %>
