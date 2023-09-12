@@ -1,7 +1,7 @@
 {
   "name": "pseiler-auditd",
-  "version": "2.2.0",
-  "author": "Danny Roberts",
+  "version": "2.3.0",
+  "author": "Danny Roberts, Philipp Seiler",
   "summary": "Manage the audit daemon and it's rules.",
   "license": "BSD-2-Clause",
   "source": "https://github.com/pseiler/puppet-auditd",
