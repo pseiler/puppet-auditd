@@ -190,4 +190,26 @@ describe 'auditd' do
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(/^tcp_client_ports = 666$/) }
   end
+  context 'Check if boolean parameters correctly convert' do
+    let(:facts) do
+      {
+        'os' => {
+          'family'  => 'RedHat',
+          'name'    => 'RedHat',
+          'release' => {
+            'major' => '9',
+          }
+        }
+      }
+    end
+    let(:params) do
+      {
+        'enable_krb5' => true,
+        'krb5_key_file' => '/etc/krb5/key.file',
+      }
+    end
+
+    it { is_expected.to compile.with_all_deps }
+    it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(/^enable_krb5 = yes$/) }
+  end
 end

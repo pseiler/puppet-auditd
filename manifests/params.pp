@@ -85,8 +85,8 @@ class auditd::params {
   $tcp_listen_queue        = 5
   $tcp_max_per_addr        = 1
   $tcp_client_ports        = undef
-  $tcp_client_max_idle     = '0'
-  $enable_krb5             = 'no'
+  $tcp_client_max_idle     = 0
+  $enable_krb5             = false
   $krb5_principal          = 'auditd'
   $krb5_key_file           = undef
 

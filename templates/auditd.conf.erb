@@ -43,7 +43,7 @@ tcp_client_ports = <%= @tcp_client_ports %>
 <% end -%>
 <% end -%>
 tcp_client_max_idle = <%= @tcp_client_max_idle %>
-enable_krb5 = <%= @enable_krb5 %>
+enable_krb5 = <%= scope.call_function('auditd::bool2yesno', [@enable_krb5]) %>
 krb5_principal = <%= @krb5_principal %>
 <% unless @krb5_key_file.nil? -%>
 krb5_key_file = <%= @krb5_key_file %>

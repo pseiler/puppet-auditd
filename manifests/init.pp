@@ -316,6 +316,9 @@
 # [*rules*]
 #   Hash of auditd rules to be applied using the audit::rule defined type.
 #
+# [*continue_loading*]
+#   Wether or not parsing the rules should stop when an error occurs.
+#
 # === Examples
 #
 #  class { 'auditd':
@@ -342,7 +345,7 @@ class auditd (
   Integer $priority_boost                = $auditd::params::priority_boost,
   Enum['none', 'incremental', 'incremental_async', 'data', 'sync'] $flush = $auditd::params::flush,
   Integer $freq                          = $auditd::params::freq,
-  Integer $num_logs                      = $auditd::params::num_logs,
+  Integer[1] $num_logs                      = $auditd::params::num_logs,
   Optional[Enum['lossy','lossless']] $disp_qos = $auditd::params::disp_qos,
   Optional[String] $dispatcher           = $auditd::params::dispatcher,
   Enum['none','hostname','fqd','numeric','user'] $name_format = $auditd::params::name_format,
@@ -363,11 +366,11 @@ class auditd (
   # also these Integers (with or without the parent array) also have a min and a max value. The Array also can store two
   # Integers at max
   Optional[Variant[Integer[1,65535],Array[Integer[1,65535],1,2]]] $tcp_client_ports = $auditd::params::tcp_client_ports,
-  $tcp_client_max_idle                   = $auditd::params::tcp_client_max_idle,
-  $enable_krb5                           = $auditd::params::enable_krb5,
-  $krb5_principal                        = $auditd::params::krb5_principal,
-  $krb5_key_file                         = $auditd::params::krb5_key_file,
-  $continue_loading                      = $auditd::params::continue_loading,
+  Integer[0] $tcp_client_max_idle        = $auditd::params::tcp_client_max_idle,
+  Boolean $enable_krb5                   = $auditd::params::enable_krb5,
+  String $krb5_principal                 = $auditd::params::krb5_principal,
+  String $krb5_key_file                  = $auditd::params::krb5_key_file,
+  Boolean $continue_loading              = $auditd::params::continue_loading,
 
   # Variables for Audit files
   $rules_file              = $auditd::params::rules_file,
@@ -446,8 +449,7 @@ class auditd (
     validate_integer($tcp_max_per_addr)
   }
   validate_integer($tcp_client_max_idle)
-  validate_re($enable_krb5, '^(yes|no)$',
-  "${enable_krb5} is not supported for enable_krb5. Allowed values are 'no' and 'yes'.")
+  validate_bool($enable_krb5)
   validate_string($krb5_principal)
   if $tcp_client_ports != undef {
     validate_absolute_path($krb5_key_file)
