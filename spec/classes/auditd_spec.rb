@@ -5,11 +5,13 @@ require 'spec_helper'
 describe 'auditd' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
-      let(:facts) { os_facts.merge(
-        'networking' => {
-          'hostname' => 'testserver.example.com',
-        }
-      )}
+      let(:facts) {
+        os_facts.merge(
+          'networking' => {
+            'hostname' => 'testserver.example.com',
+          },
+        )
+      }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('auditd::params') }
@@ -161,7 +163,7 @@ describe 'auditd' do
     let(:params) do
       {
         'krb5_key_file' => '/etc/krb5/key.file',
-        'tcp_client_ports' => [666,1024],
+        'tcp_client_ports' => [666, 1024],
       }
     end
 

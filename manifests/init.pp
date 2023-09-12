@@ -301,12 +301,6 @@
 #   be set to false if you use another module to manage auditd service
 #   such as an selinux module.
 #
-# [*service_restart*]
-#   Command to restart the auditd service.
-#
-# [*service_stop*]
-#   Command to stop the auditd service.
-#
 # [*service_ensure*]
 #   The status the auditd daemon should be in.
 #
@@ -335,145 +329,82 @@
 #
 class auditd (
 
-  String $package_name            = $auditd::params::package_name,
+  String $package_name                                                               = $auditd::params::package_name,
 
   # Config file variables
-  String $log_file                       = $auditd::params::log_file,
-  Enum['RAW','ENRICHED'] $log_format     = $auditd::params::log_format,
-  String $log_group                      = $auditd::params::log_group,
-  Optional[Enum['yes','no']] $write_logs = $auditd::params::write_logs,
-  Integer $priority_boost                = $auditd::params::priority_boost,
-  Enum['none', 'incremental', 'incremental_async', 'data', 'sync'] $flush = $auditd::params::flush,
-  Integer $freq                          = $auditd::params::freq,
-  Integer[1] $num_logs                      = $auditd::params::num_logs,
-  Optional[Enum['lossy','lossless']] $disp_qos = $auditd::params::disp_qos,
-  Optional[String] $dispatcher           = $auditd::params::dispatcher,
-  Enum['none','hostname','fqd','numeric','user'] $name_format = $auditd::params::name_format,
-  String $admin                          = $auditd::params::admin,
-  Integer $max_log_file                  = $auditd::params::max_log_file,
-  Enum['ignore','syslog','suspend','rotate','keep_logs'] $max_log_file_action = $auditd::params::max_log_file_action,
-  Integer $space_left                    = $auditd::params::space_left,
-  Enum['ignore','syslog','email','suspend','single','halt'] $space_left_action = $auditd::params::space_left_action,
-  String $action_mail_acct               = $auditd::params::action_mail_acct,
-  Integer $admin_space_left              = $auditd::params::admin_space_left,
+  String $log_file                                                                   = $auditd::params::log_file,
+  Enum['NOLOG','RAW','ENRICHED'] $log_format                                         = $auditd::params::log_format,
+  String $log_group                                                                  = $auditd::params::log_group,
+  Optional[Boolean] $write_logs                                                      = $auditd::params::write_logs,
+  Integer $priority_boost                                                            = $auditd::params::priority_boost,
+  Enum['none','incremental','incremental_async','data','sync'] $flush                = $auditd::params::flush,
+  Integer $freq                                                                      = $auditd::params::freq,
+  Integer[1] $num_logs                                                               = $auditd::params::num_logs,
+  Optional[Enum['lossy','lossless']] $disp_qos                                       = $auditd::params::disp_qos,
+  Optional[String] $dispatcher                                                       = $auditd::params::dispatcher,
+  Enum['none','hostname','fqd','numeric','user'] $name_format                        = $auditd::params::name_format,
+  String $admin                                                                      = $auditd::params::admin,
+  Integer $max_log_file                                                              = $auditd::params::max_log_file,
+  Enum['ignore','syslog','suspend','rotate','keep_logs'] $max_log_file_action        = $auditd::params::max_log_file_action,
+  Integer $space_left                                                                = $auditd::params::space_left,
+  Enum['ignore','syslog','email','suspend','single','halt'] $space_left_action       = $auditd::params::space_left_action,
+  String $action_mail_acct                                                           = $auditd::params::action_mail_acct,
+  Integer $admin_space_left                                                          = $auditd::params::admin_space_left,
   Enum['ignore','syslog','email','suspend','single','halt'] $admin_space_left_action = $auditd::params::admin_space_left_action,
-  Enum['ignore','syslog','suspend','single','halt'] $disk_full_action = $auditd::params::disk_full_action,
-  Enum['ignore','syslog','suspend','single','halt'] $disk_error_action = $auditd::params::disk_error_action,
-  Optional[String] $tcp_listen_port      = $auditd::params::tcp_listen_port,
-  Integer $tcp_listen_queue              = $auditd::params::tcp_listen_queue,
-  Integer[1,16] $tcp_max_per_addr        = $auditd::params::tcp_max_per_addr,
+  Enum['ignore','syslog','suspend','single','halt'] $disk_full_action                = $auditd::params::disk_full_action,
+  Enum['ignore','syslog','suspend','single','halt'] $disk_error_action               = $auditd::params::disk_error_action,
+  Optional[String] $tcp_listen_port                                                  = $auditd::params::tcp_listen_port,
+  Integer $tcp_listen_queue                                                          = $auditd::params::tcp_listen_queue,
+  Integer[1,16] $tcp_max_per_addr                                                    = $auditd::params::tcp_max_per_addr,
   # this line is awful. It's a optional parameter which can be an Integer or an Array that contains two Integers at max.
-  # also these Integers (with or without the parent array) also have a min and a max value. The Array also can store two
-  # Integers at max
-  Optional[Variant[Integer[1,65535],Array[Integer[1,65535],1,2]]] $tcp_client_ports = $auditd::params::tcp_client_ports,
-  Integer[0] $tcp_client_max_idle        = $auditd::params::tcp_client_max_idle,
-  Boolean $enable_krb5                   = $auditd::params::enable_krb5,
-  String $krb5_principal                 = $auditd::params::krb5_principal,
-  String $krb5_key_file                  = $auditd::params::krb5_key_file,
-  Boolean $continue_loading              = $auditd::params::continue_loading,
+  # also these Integers (with or without the parent array) also have a min and a max value.
+  Optional[Variant[Integer[1,65535],Array[Integer[1,65535],1,2]]] $tcp_client_ports  = $auditd::params::tcp_client_ports,
+  Integer[0] $tcp_client_max_idle                                                    = $auditd::params::tcp_client_max_idle,
+  Boolean $enable_krb5                                                               = $auditd::params::enable_krb5,
+  String $krb5_principal                                                             = $auditd::params::krb5_principal,
+  Optional[String] $krb5_key_file                                                    = $auditd::params::krb5_key_file,
+  Boolean $continue_loading                                                          = $auditd::params::continue_loading,
 
   # Variables for Audit files
-  $rules_file              = $auditd::params::rules_file,
-  $manage_audit_files      = $auditd::params::manage_audit_files,
-  $ignored_files_on_purge  = $auditd::params::ignored_files_on_purge,
-  $buffer_size             = $auditd::params::buffer_size,
+  String $rules_file                    = $auditd::params::rules_file,
+  Boolean $manage_audit_files           = $auditd::params::manage_audit_files,
+  Array[String] $ignored_files_on_purge = $auditd::params::ignored_files_on_purge,
+  Integer $buffer_size                  = $auditd::params::buffer_size,
 
   # Audisp main config variables
-  $audisp_q_depth          = $auditd::params::audisp_q_depth,
-  $audisp_overflow_action  = $auditd::params::audisp_overflow_action,
-  $audisp_priority_boost   = $auditd::params::audisp_priority_boost,
-  $audisp_max_restarts     = $auditd::params::audisp_max_restarts,
-  $audisp_name_format      = $auditd::params::audisp_name_format,
-  $audisp_name             = $auditd::params::audisp_name,
-  $has_audisp_config       = $auditd::params::has_audisp_config,
+  Integer[0] $audisp_q_depth                                                = $auditd::params::audisp_q_depth,
+  Enum['ignore','syslog','suspend','single','halt'] $audisp_overflow_action = $auditd::params::audisp_overflow_action,
+  Integer[0] $audisp_priority_boost                                         = $auditd::params::audisp_priority_boost,
+  Integer[0] $audisp_max_restarts                                           = $auditd::params::audisp_max_restarts,
+  Enum['none','hostname','fqd','numeric','user'] $audisp_name_format        = $auditd::params::audisp_name_format,
+  Optional[String] $audisp_name                                             = $auditd::params::audisp_name,
+  Boolean $has_audisp_config                                                = $auditd::params::has_audisp_config,
 
   # Service management variables
-  $manage_service          = $auditd::params::manage_service,
-  $service_restart         = $auditd::params::service_restart,
-  $service_stop            = $auditd::params::service_stop,
-  $service_ensure          = $auditd::params::service_ensure,
-  $service_enable          = $auditd::params::service_enable,
+  Boolean $manage_service                                    = $auditd::params::manage_service,
+  Variant[Boolean,Enum['running','stopped']] $service_ensure = $auditd::params::service_ensure,
+  Boolean $service_enable                                    = $auditd::params::service_enable,
 
   # Optionally define rules through main class
   $rules                   = {},
 
 ) inherits auditd::params {
-  # Validate all our variables
-  validate_string($package_name)
+  # Validate all special variables
 
   validate_absolute_path($log_file)
-  validate_re($log_format, '^(RAW|NOLOG|ENRICHED)$',
-  "${log_format} is not supported for log_format. Allowed values are 'RAW', 'ENRICHED' and 'NOLOG'.")
-  validate_string($log_group)
-  if $write_logs != undef {
-    validate_re($write_logs, '^(yes|no)$',
-    "${write_logs} is not supported for write_logs. Allowed values are 'yes' and 'no'.")
-  }
-  validate_integer($priority_boost)
-  validate_re($flush, '^(none|incremental|incremental_async|data|sync)$',
-  "${flush} is not supported for flush. Allowed values are 'none', 'incremental', 'incremental_async', 'data' and 'sync'.")
-  validate_integer($freq)
-  validate_integer($num_logs)
-  if $disp_qos != undef {
-    validate_re($disp_qos, '^(lossy|lossless)$',
-    "${disp_qos} is not supported for disp_qos. Allowed values are 'lossy' and 'lossless'.")
-  }
+
   if $disp_qos != undef {
     validate_absolute_path($dispatcher)
   }
-  validate_re($name_format, '^(none|hostname|fqd|numeric|user)$',
-  "${name_format} is not supported for name_format. Allowed values are 'none', 'hostname', 'fqd', 'numeric' and 'user'.")
-  validate_string($admin)
-  validate_integer($max_log_file)
-  validate_re($max_log_file_action, '^(ignore|syslog|suspend|rotate|keep_logs)$',
-  "${max_log_file_action} is not supported for max_log_file_action. Allowed values are 'ignore', 'syslog', 'suspend', 'rotate' and 'keep_logs'.")
-  validate_integer($space_left)
-  validate_re($space_left_action, '^(ignore|syslog|email|exec|suspend|single|halt)$',
-  "${space_left_action} is not supported for space_left_action. Allowed values are 'ignore', 'syslog', 'email', 'exec', 'suspend', 'single' and 'halt'.")
-  validate_string($action_mail_acct)
+  # check if email address is valid
   if $action_mail_acct !~ /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ {
-    fail("Parameter error: E-Mail address \"$action_mail_acct\" is not valid.")
+    fail("Parameter error: E-Mail address \"${action_mail_acct}\" is not valid.")
   }
-  validate_integer($admin_space_left)
-  validate_re($admin_space_left_action, '^(ignore|syslog|email|exec|suspend|single|halt)$',
-  "${admin_space_left_action} is not supported for admin_space_left_action. Allowed values are 'ignore', 'syslog', 'email', 'exec', 'suspend', 'single' and 'halt'.")
-  validate_re($disk_full_action, '^(ignore|syslog|exec|suspend|single|halt)$',
-  "${disk_full_action} is not supported for disk_full_action. Allowed values are 'ignore', 'syslog', 'exec', 'suspend', 'single' and 'halt'.")
-  validate_re($disk_error_action, '^(ignore|syslog|exec|suspend|single|halt)$',
-  "${disk_error_action} is not supported for disk_error_action. Allowed values are 'ignore', 'syslog', 'exec', 'suspend', 'single' and 'halt'.")
-  if $tcp_listen_port != undef {
-    validate_integer($tcp_listen_port)
-  }
-  validate_integer($tcp_listen_queue)
-  if $tcp_max_per_addr != undef {
-    validate_integer($tcp_max_per_addr)
-  }
-  validate_integer($tcp_client_max_idle)
-  validate_bool($enable_krb5)
-  validate_string($krb5_principal)
   if $tcp_client_ports != undef {
     validate_absolute_path($krb5_key_file)
   }
-  validate_bool($continue_loading)
 
   validate_absolute_path($rules_file)
-  validate_bool($manage_audit_files)
-  validate_integer($buffer_size)
-
-  validate_integer($audisp_q_depth)
-  validate_re($audisp_overflow_action, '^(ignore|syslog|suspend|single|halt)$',
-  "${audisp_overflow_action} is not supported for 'audisp_overflow_action'. Allowed values are 'ignore', 'syslog', 'suspend', 'single' & 'halt'.")
-  validate_integer($audisp_priority_boost)
-  validate_integer($audisp_max_restarts)
-  if $audisp_name {
-    validate_string($audisp_name)
-  }
-
-  validate_bool($manage_service)
-  validate_string($service_restart)
-  validate_string($service_stop)
-  validate_string($service_ensure)
-  validate_bool($service_enable)
 
   # Install package
   package { $package_name:
@@ -545,8 +476,6 @@ class auditd (
       ensure    => $service_ensure,
       enable    => $service_enable,
       hasstatus => true,
-      restart   => $service_restart,
-      stop      => $service_stop,
       subscribe => [
         File['/etc/audit/auditd.conf'],
         Concat[$rules_file],

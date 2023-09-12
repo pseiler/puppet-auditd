@@ -18,15 +18,11 @@ class auditd::params {
         $audisp_package     = 'audit-audispd-plugins'
         $manage_audit_files = true
         $rules_file         = '/etc/audit/rules.d/puppet.rules'
-        $service_restart    = '/bin/systemctl restart auditd'
-        $service_stop       = '/bin/systemctl stop auditd'
       }
       else {
         $audisp_package     = 'audispd-plugins'
-        $manage_audit_files = false
+        $manage_audit_files = true
         $rules_file         = '/etc/audit/audit.rules'
-        $service_restart    = '/etc/init.d/auditd restart'
-        $service_stop       = '/etc/init.d/auditd stop'
       }
     }
     'RedHat': {
@@ -48,12 +44,8 @@ class auditd::params {
 
       if $facts['os']['name'] != 'Amazon' and versioncmp($facts['os']['release']['major'], '7') >= 0 {
         $rules_file      = '/etc/audit/rules.d/puppet.rules'
-        $service_restart = '/usr/libexec/initscripts/legacy-actions/auditd/restart'
-        $service_stop    = '/usr/libexec/initscripts/legacy-actions/auditd/stop'
       } else {
         $rules_file      = '/etc/audit/audit.rules'
-        $service_restart = '/etc/init.d/auditd restart'
-        $service_stop    = '/etc/init.d/auditd stop'
       }
     }
     default: {
@@ -91,7 +83,7 @@ class auditd::params {
   $krb5_key_file           = undef
 
   # Rules Header variables
-  $buffer_size      = '8192'
+  $buffer_size      = 8192
   $continue_loading = false
 
   # Audisp main config variables
