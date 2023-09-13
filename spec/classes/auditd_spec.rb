@@ -56,7 +56,7 @@ describe 'auditd' do
           'family'  => 'RedHat',
           'name'    => 'AlmaLinux',
           'release' => {
-            'major' => '7',
+            'major' => '8',
           }
         }
       }
@@ -70,6 +70,34 @@ describe 'auditd' do
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_service('auditd') }
     it { is_expected.to contain_exec('reload_auditd')
+      .with_command('/sbin/service auditd reload')
+      .with_subscribe('[File[/etc/audit/auditd.conf]{:path=>"/etc/audit/auditd.conf"}, Concat[/etc/audit/rules.d/puppet.rules]{:name=>"/etc/audit/rules.d/puppet.rules"}]')
+    }
+  end
+
+  context "Check if 'service_provider = systemd' is acting correctly" do
+    let(:facts) do
+      {
+        'os' => {
+          'family'  => 'RedHat',
+          'name'    => 'AlmaLinux',
+          'release' => {
+            'major' => '8',
+          }
+        }
+      }
+    end
+    let(:params) do
+      {
+        'manage_service'   => true,
+        'service_provider' => 'systemd',
+      }
+    end
+
+    it { is_expected.to compile.with_all_deps }
+    it { is_expected.to contain_service('auditd') }
+    it { is_expected.to contain_exec('reload_auditd')
+      .with_command('systemctl reload auditd')
       .with_subscribe('[File[/etc/audit/auditd.conf]{:path=>"/etc/audit/auditd.conf"}, Concat[/etc/audit/rules.d/puppet.rules]{:name=>"/etc/audit/rules.d/puppet.rules"}]')
     }
   end

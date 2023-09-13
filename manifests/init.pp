@@ -332,58 +332,60 @@ class auditd (
   String $package_name                                                               = $auditd::params::package_name,
 
   # Config file variables
-  String $log_file                                                                   = $auditd::params::log_file,
-  Enum['NOLOG','RAW','ENRICHED'] $log_format                                         = $auditd::params::log_format,
-  String $log_group                                                                  = $auditd::params::log_group,
-  Optional[Boolean] $write_logs                                                      = $auditd::params::write_logs,
-  Integer[0] $priority_boost                                                         = $auditd::params::priority_boost,
-  Enum['none','incremental','incremental_async','data','sync'] $flush                = $auditd::params::flush,
-  Integer[0] $freq                                                                   = $auditd::params::freq,
-  Integer[1] $num_logs                                                               = $auditd::params::num_logs,
+  String $log_file                                                                   = '/var/log/audit/audit.log',
+  Enum['NOLOG','RAW','ENRICHED'] $log_format                                         = 'RAW',
+  String $log_group                                                                  = 'root',
+  Optional[Boolean] $write_logs                                                      = undef,
+  Integer[0] $priority_boost                                                         = 4,
+  Enum['none','incremental','incremental_async','data','sync'] $flush                = 'incremental_async',
+  Integer[0] $freq                                                                   = 20,
+  Integer[1] $num_logs                                                               = 5,
   Optional[Enum['lossy','lossless']] $disp_qos                                       = $auditd::params::disp_qos,
   Optional[String] $dispatcher                                                       = $auditd::params::dispatcher,
-  Enum['none','hostname','fqd','numeric','user'] $name_format                        = $auditd::params::name_format,
-  String $admin                                                                      = $auditd::params::admin,
-  Integer $max_log_file                                                              = $auditd::params::max_log_file,
-  Enum['ignore','syslog','suspend','rotate','keep_logs'] $max_log_file_action        = $auditd::params::max_log_file_action,
-  Integer $space_left                                                                = $auditd::params::space_left,
-  Enum['ignore','syslog','email','suspend','single','halt'] $space_left_action       = $auditd::params::space_left_action,
-  String $action_mail_acct                                                           = $auditd::params::action_mail_acct,
-  Integer $admin_space_left                                                          = $auditd::params::admin_space_left,
-  Enum['ignore','syslog','email','suspend','single','halt'] $admin_space_left_action = $auditd::params::admin_space_left_action,
-  Enum['ignore','syslog','suspend','single','halt'] $disk_full_action                = $auditd::params::disk_full_action,
-  Enum['ignore','syslog','suspend','single','halt'] $disk_error_action               = $auditd::params::disk_error_action,
-  Optional[String] $tcp_listen_port                                                  = $auditd::params::tcp_listen_port,
-  Integer $tcp_listen_queue                                                          = $auditd::params::tcp_listen_queue,
-  Integer[1,16] $tcp_max_per_addr                                                    = $auditd::params::tcp_max_per_addr,
+  Enum['none','hostname','fqd','numeric','user'] $name_format                        = 'none',
+  String $admin                                                                      = $facts['networking']['hostname'],
+  Integer $max_log_file                                                              = 6,
+  Enum['ignore','syslog','suspend','rotate','keep_logs'] $max_log_file_action        = 'rotate',
+  Integer $space_left                                                                = 75,
+  Enum['ignore','syslog','email','suspend','single','halt'] $space_left_action       = 'syslog',
+  String $action_mail_acct                                                           = 'root@example.com',
+  Integer $admin_space_left                                                          = 50,
+  Enum['ignore','syslog','email','suspend','single','halt'] $admin_space_left_action = 'suspend',
+  Enum['ignore','syslog','suspend','single','halt'] $disk_full_action                = 'suspend',
+  Enum['ignore','syslog','suspend','single','halt'] $disk_error_action               = 'suspend',
+  Optional[Integer[1,65535]] $tcp_listen_port                                        = undef,
+  Integer $tcp_listen_queue                                                          = 5,
+  Integer[1,16] $tcp_max_per_addr                                                    = 1,
   # this line is awful. It's a optional parameter which can be an Integer or an Array that contains two Integers at max.
   # also these Integers (with or without the parent array) also have a min and a max value.
-  Optional[Variant[Integer[1,65535],Array[Integer[1,65535],1,2]]] $tcp_client_ports  = $auditd::params::tcp_client_ports,
-  Integer[0] $tcp_client_max_idle                                                    = $auditd::params::tcp_client_max_idle,
-  Boolean $enable_krb5                                                               = $auditd::params::enable_krb5,
-  String $krb5_principal                                                             = $auditd::params::krb5_principal,
-  Optional[String] $krb5_key_file                                                    = $auditd::params::krb5_key_file,
-  Boolean $continue_loading                                                          = $auditd::params::continue_loading,
+  Optional[Variant[Integer[1,65535],Array[Integer[1,65535],1,2]]] $tcp_client_ports  = undef,
+  Integer[0] $tcp_client_max_idle                                                    = 0,
+  Boolean $enable_krb5                                                               = false,
+  String $krb5_principal                                                             = 'auditd',
+  Optional[String] $krb5_key_file                                                    = undef,
+  Boolean $continue_loading                                                          = false,
 
   # Variables for Audit files
   String $rules_file                    = $auditd::params::rules_file,
   Boolean $manage_audit_files           = $auditd::params::manage_audit_files,
-  Array[String] $ignored_files_on_purge = $auditd::params::ignored_files_on_purge,
-  Integer $buffer_size                  = $auditd::params::buffer_size,
+  Array[String] $ignored_files_on_purge = [],
+  Integer $buffer_size                  = 8192,
 
   # Audisp main config variables
-  Integer[0] $audisp_q_depth                                                = $auditd::params::audisp_q_depth,
-  Enum['ignore','syslog','suspend','single','halt'] $audisp_overflow_action = $auditd::params::audisp_overflow_action,
-  Integer[0] $audisp_priority_boost                                         = $auditd::params::audisp_priority_boost,
-  Integer[0] $audisp_max_restarts                                           = $auditd::params::audisp_max_restarts,
-  Enum['none','hostname','fqd','numeric','user'] $audisp_name_format        = $auditd::params::audisp_name_format,
-  Optional[String] $audisp_name                                             = $auditd::params::audisp_name,
+  Integer[0] $audisp_q_depth                                                = 80,
+  Enum['ignore','syslog','suspend','single','halt'] $audisp_overflow_action = 'syslog',
+  Integer[0] $audisp_priority_boost                                         = 4,
+  Integer[0] $audisp_max_restarts                                           = 10,
+  Enum['none','hostname','fqd','numeric','user'] $audisp_name_format        = 'none',
+  Optional[String] $audisp_name                                             = undef,
   Boolean $has_audisp_config                                                = $auditd::params::has_audisp_config,
 
   # Service management variables
-  Boolean $manage_service                                    = $auditd::params::manage_service,
-  Variant[Boolean,Enum['running','stopped']] $service_ensure = $auditd::params::service_ensure,
-  Boolean $service_enable                                    = $auditd::params::service_enable,
+  Boolean $manage_service                                    = true,
+  Variant[Boolean,Enum['running','stopped']] $service_ensure = 'running',
+  Boolean $service_enable                                    = true,
+  String $service_name                                       = 'auditd',
+  Optional[String] $service_provider                         = undef,
 
   # Optionally define rules through main class
   $rules                   = {},
@@ -472,20 +474,34 @@ class auditd (
 
   # Manage the service
   if $manage_service {
-    service { 'auditd':
+    service { $service_name:
       ensure    => $service_ensure,
       enable    => $service_enable,
       hasstatus => true,
     }
 
-    exec { 'reload_auditd':
-      command     => "systemctl reload auditd",
-      path        => ['/bin','/usr/bin','/sbin','/usr/sbin'],
-      refreshonly => true,
-      subscribe   => [
-        File['/etc/audit/auditd.conf'],
-        Concat[$rules_file],
-      ],
+    case $service_provider {
+      'systemd': {
+        exec { 'reload_auditd':
+          command     => "systemctl reload ${service_name}",
+          path        => ['/sbin','/bin','/usr/sbin','/usr/bin'],
+          refreshonly => true,
+          subscribe   => [
+            File['/etc/audit/auditd.conf'],
+            Concat[$rules_file],
+          ],
+        }
+      }
+      'redhat', default: {
+        exec { 'reload_auditd':
+          command     => "/sbin/service ${service_name} reload",
+          refreshonly => true,
+          subscribe   => [
+            File['/etc/audit/auditd.conf'],
+            Concat[$rules_file],
+          ],
+        }
+      }
     }
   }
 }
