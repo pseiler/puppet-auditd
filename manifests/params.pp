@@ -49,7 +49,7 @@ class auditd::params {
       }
     }
     default: {
-      fail("${facts['os']['family']} is not supported by auditd")
+      fail("OS family \"${facts['os']['family']}\" is not supported by auditd")
     }
   }
 }
