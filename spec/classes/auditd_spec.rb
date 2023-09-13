@@ -222,7 +222,7 @@ describe 'auditd' do
     end
 
     it { is_expected.to compile.with_all_deps }
-    it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(/^tcp_client_ports = 666\/1024$/) }
+    it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(%r{^tcp_client_ports = 666/1024$}) }
   end
   context 'Check if tcp_client_ports act correctly with String' do
     let(:facts) do
@@ -244,7 +244,7 @@ describe 'auditd' do
     end
 
     it { is_expected.to compile.with_all_deps }
-    it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(/^tcp_client_ports = 666$/) }
+    it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(%r{^tcp_client_ports = 666$}) }
   end
   context 'Check if boolean parameters correctly convert' do
     let(:facts) do
@@ -268,8 +268,8 @@ describe 'auditd' do
 
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(
-      /^enable_krb5 = yes$/,
-      /^write_logs = no$/,
+      %r{^enable_krb5 = yes$},
+      %r{^write_logs = no$},
     )}
   end
 end
