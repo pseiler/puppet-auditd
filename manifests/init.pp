@@ -476,7 +476,13 @@ class auditd (
       ensure    => $service_ensure,
       enable    => $service_enable,
       hasstatus => true,
-      subscribe => [
+    }
+
+    exec { 'reload_auditd':
+      command     => "systemctl reload auditd",
+      path        => ['/bin','/usr/bin','/sbin','/usr/sbin'],
+      refreshonly => true,
+      subscribe   => [
         File['/etc/audit/auditd.conf'],
         Concat[$rules_file],
       ],
