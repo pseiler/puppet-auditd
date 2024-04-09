@@ -144,6 +144,12 @@
 #   daemon to put the computer system in single user mode. halt option will
 #   cause the audit daemon to shutdown the computer system.
 #
+# [*verify_email*]
+#   This parameter determines if the email address given in action_mail_acct
+#   is checked to see if the domain name can be resolved. This option must
+#   be given before action_mail_acct or the default value of true will be
+#   used.
+#
 # [*action_mail_acct*]
 #   This option should contain a valid email address or alias. The default
 #   address is root. If the email address is not local to the machine, you
@@ -348,6 +354,7 @@ class auditd (
   Enum['ignore','syslog','suspend','rotate','keep_logs'] $max_log_file_action        = 'rotate',
   Integer $space_left                                                                = 75,
   Enum['ignore','syslog','email','suspend','single','halt'] $space_left_action       = 'syslog',
+  Optional[Boolean] $verify_email                                                    = undef,
   String $action_mail_acct                                                           = 'root@example.com',
   Integer $admin_space_left                                                          = 50,
   Enum['ignore','syslog','email','suspend','single','halt'] $admin_space_left_action = 'suspend',

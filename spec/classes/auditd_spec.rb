@@ -178,7 +178,7 @@ describe 'auditd' do
       }
     end
 
-    it { is_expected.to compile.with_all_deps.and_raise_error(/Parameter error: E-Mail address ".*" is not valid./) }
+    it { is_expected.to compile.with_all_deps.and_raise_error(%r{Parameter error: E-Mail address ".*" is not valid.}) }
   end
 
   context 'Check if correct email results into a compiling the catalog' do
@@ -263,13 +263,37 @@ describe 'auditd' do
         'enable_krb5'   => true,
         'krb5_key_file' => '/etc/krb5/key.file',
         'write_logs'    => false,
+        'verify_email'  => false,
       }
     end
 
     it { is_expected.to compile.with_all_deps }
-    it { is_expected.to contain_file('/etc/audit/auditd.conf').with_content(
-      %r{^enable_krb5 = yes$},
-      %r{^write_logs = no$},
-    )}
+    it {
+      is_expected.to contain_file('/etc/audit/auditd.conf').with_content(
+        %r{^enable_krb5 = yes$},
+        %r{^write_logs = no$},
+        %r{^verify_email = no$},
+      )
+    }
+  end
+  context 'Check if optional parameter "verify_email" is not present' do
+    let(:facts) do
+      {
+        'os' => {
+          'family'  => 'RedHat',
+          'name'    => 'RedHat',
+          'release' => {
+            'major' => '9',
+          }
+        }
+      }
+    end
+
+    it { is_expected.to compile.with_all_deps }
+    it {
+      is_expected.to contain_file('/etc/audit/auditd.conf').without_content(
+        %r{^verify_email = (yes|no)},
+      )
+    }
   end
 end

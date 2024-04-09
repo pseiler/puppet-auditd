@@ -23,6 +23,9 @@ max_log_file = <%= @max_log_file %>
 max_log_file_action = <%= @max_log_file_action %>
 space_left = <%= @space_left %>
 space_left_action = <%= @space_left_action %>
+<% unless @verify_email.nil? -%>
+verify_email = <%= scope.call_function('auditd::bool2yesno', [@verify_email]) %>
+<% end -%>
 action_mail_acct = <%= @action_mail_acct %>
 admin_space_left = <%= @admin_space_left %>
 admin_space_left_action = <%= @admin_space_left_action %>
