@@ -400,20 +400,20 @@ class auditd (
 ) inherits auditd::params {
   # Validate all special variables
 
-  validate_absolute_path($log_file)
+  assert_type(Stdlib::Absolutepath, $log_file)
 
   if $disp_qos != undef {
-    validate_absolute_path($dispatcher)
+    assert_type(Stdlib::Absolutepath, $dispatcher)
   }
   # check if email address is valid
   if $action_mail_acct !~ /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ {
     fail("Parameter error: E-Mail address \"${action_mail_acct}\" is not valid.")
   }
   if $tcp_client_ports != undef {
-    validate_absolute_path($krb5_key_file)
+    assert_type(Stdlib::Absolutepath, $krb5_key_file)
   }
 
-  validate_absolute_path($rules_file)
+  assert_type(Stdlib::Absolutepath, $rules_file)
 
   # Install package
   package { $package_name:

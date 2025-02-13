@@ -7,18 +7,20 @@ define auditd::audisp::plugin (
   $format     = 'string',
   $audisp_dir = $auditd::params::audisp_dir
 ) {
-  validate_bool($active)
-  validate_re($direction, '^(out|in)$',
-  "${direction} is not supported for 'direction'. Allowed values are 'out' and 'in'.")
-  validate_string($path)
-  validate_re($type, '^(builtin|always)$',
-  "${type} is not supported for 'type'. Allowed values are 'builtin' and 'always'.")
-  if $args {
-    validate_string($args)
+  assert_type(Boolean,$active)
+  if $direction !~ '^(out|in)$' {
+    fail("${direction} is not supported for 'direction'. Allowed values are 'out' and 'in'.")
   }
-  validate_re($format, '^(binary|string)$',
-  "${format} is not supported for 'format'. Allowed values are 'binary' and 'string'.")
-
+  assert_type(String, $path)
+  if $type !~ '^(builtin|always)$' {
+    fail("${type} is not supported for 'type'. Allowed values are 'builtin' and 'always'.")
+  }
+  if $args {
+    assert_type(String,$args)
+  }
+  if $format !~ '^(binary|string)$' {
+    fail("${format} is not supported for 'format'. Allowed values are 'binary' and 'string'.")
+  }
   if $active == true {
     $real_active = 'yes'
   }
