@@ -1,6 +1,6 @@
 {
   "name": "pseiler-auditd",
-  "version": "2.3.2",
+  "version": "2.3.4",
   "author": "Danny Roberts, Philipp Seiler",
   "summary": "Manage the audit daemon and it's rules.",
   "license": "BSD-2-Clause",
@@ -10,7 +10,7 @@
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 4.6.0 < 8.0.0"
+      "version_requirement": ">= 8.0.0"
     },
     {
       "name": "puppetlabs-concat",
