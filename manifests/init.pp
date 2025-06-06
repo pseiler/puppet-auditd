@@ -481,14 +481,20 @@ class auditd (
 
   # Manage the service
   if $manage_service {
+    if $facts['os']['family'] =~ 'RedHat' {
+      $redhat_args = { 'restart' => 'service auditd restart',  'start' => 'service auditd start', 'status' => 'service auditd status', 'stop' => 'service auditd stop'}
+    }
+    else {
+      $redhat_args = {}
+    }
     service { $service_name:
       ensure    => $service_ensure,
       enable    => $service_enable,
       hasstatus => true,
+      *         => $redhat_args,
     }
 
-    case $service_provider {
-      'systemd': {
+    if $service_provider == 'systemd' and $facts['os']['family'] !~ 'RedHat' {
         exec { 'reload_auditd':
           command     => "systemctl reload ${service_name}",
           path        => ['/sbin','/bin','/usr/sbin','/usr/bin'],
@@ -498,8 +504,8 @@ class auditd (
             Concat[$rules_file],
           ],
         }
-      }
-      'redhat', default: {
+    }
+    else {
         exec { 'reload_auditd':
           command     => "/sbin/service ${service_name} reload",
           refreshonly => true,
@@ -508,7 +514,6 @@ class auditd (
             Concat[$rules_file],
           ],
         }
-      }
     }
   }
 }
