@@ -357,7 +357,7 @@ class auditd (
   Optional[Boolean] $verify_email                                                    = undef,
   String $action_mail_acct                                                           = 'root@example.com',
   Integer $admin_space_left                                                          = 50,
-  Enum['ignore','syslog','email','suspend','single','halt'] $admin_space_left_action = 'suspend',
+  String[1] $admin_space_left_action                                                 = 'suspend',
   Enum['ignore','syslog','suspend','single','halt'] $disk_full_action                = 'suspend',
   Enum['ignore','syslog','suspend','single','halt'] $disk_error_action               = 'suspend',
   Optional[Integer[1,65535]] $tcp_listen_port                                        = undef,
