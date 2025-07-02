@@ -468,6 +468,26 @@ Determines if `auditd` will continue to load rules if it encounters any errors.
 
 Default: `false`
 
+#### `ignore_errors`
+
+When  given by itself, ignore errors when reading rules from a file. This causes auditctl to always return a success exit code.
+
+Default: `false`
+
+#### `generate_rules`
+
+Generate audit.rules file from directory.
+You can notify this exec from yours resources
+Example:
+```
+file { '/etc/audit/rules.d/my.rules':
+  source => 'puppet:///modules/mymodule/my.rules',
+  notify => Exec['generate_rules']
+}
+```
+
+Default: `false`
+
 #### `audisp_q_depth`
 
 This is a numeric value that tells how big to make the internal queue of the audit event dispatcher. A bigger queue lets it handle a flood of events better, but could hold events that are not processed when the daemon is terminated. If you get messages in syslog about events getting dropped, increase this value.
