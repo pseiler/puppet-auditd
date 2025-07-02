@@ -481,8 +481,11 @@ You can notify this exec from yours resources
 Example:
 ```
 file { '/etc/audit/rules.d/my.rules':
+  ensure => file,
+  owner  => 'root',
+  mode   => '0640',
   source => 'puppet:///modules/mymodule/my.rules',
-  notify => Exec['generate_rules']
+  notify => Exec['generate_rules'],
 }
 ```
 
