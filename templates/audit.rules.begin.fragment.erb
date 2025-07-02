@@ -1,7 +1,12 @@
 # Default Rule - Delete ALL
 -D
 
-# Set Buffer size - increase for Busy Systems
+<% if @ignore_errors == true -%>
+# Ignore errors.
+-i
+<% end -%>
+
+# Set Buffer size - increase for Busy Systems.
 -b <%= @buffer_size %>
 
 <% if @continue_loading == true -%>

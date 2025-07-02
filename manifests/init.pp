@@ -319,6 +319,10 @@
 # [*continue_loading*]
 #   Wether or not parsing the rules should stop when an error occurs.
 #
+# [*ignore_errors*]
+#   When  given by itself, ignore errors when reading rules from a file. This causes auditctl to always return a success exit code. If passed as an argument to -s then it gives an interpretation of the numbers to human readable
+#              words if possible.
+#
 # === Examples
 #
 #  class { 'auditd':
@@ -371,6 +375,7 @@ class auditd (
   String $krb5_principal                                                             = 'auditd',
   Optional[String] $krb5_key_file                                                    = undef,
   Boolean $continue_loading                                                          = false,
+  Boolean $ignore_errors                                                             = false,
 
   # Variables for Audit files
   String $rules_file                    = $auditd::params::rules_file,
