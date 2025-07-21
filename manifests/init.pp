@@ -493,27 +493,5 @@ class auditd (
       hasstatus => true,
       *         => $redhat_args,
     }
-
-    if $service_provider == 'systemd' and $facts['os']['family'] !~ 'RedHat' {
-        exec { 'reload_auditd':
-          command     => "systemctl reload ${service_name}",
-          path        => ['/sbin','/bin','/usr/sbin','/usr/bin'],
-          refreshonly => true,
-          subscribe   => [
-            File['/etc/audit/auditd.conf'],
-            Concat[$rules_file],
-          ],
-        }
-    }
-    else {
-        exec { 'reload_auditd':
-          command     => "/sbin/service ${service_name} reload",
-          refreshonly => true,
-          subscribe   => [
-            File['/etc/audit/auditd.conf'],
-            Concat[$rules_file],
-          ],
-        }
-    }
   }
 }
