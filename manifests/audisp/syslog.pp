@@ -5,12 +5,12 @@ class auditd::audisp::syslog (
 
 ) {
 
-  stdlib::ensure_packages($auditd::params::audisp_package)
+  stdlib::ensure_packages($auditd::audisp_package)
 
   auditd::audisp::plugin { 'syslog':
     path    => $path,
     type    => $type,
     args    => $args,
-    require => Package[$auditd::params::audisp_package],
+    require => Package[$auditd::audisp_package],
   }
 }
