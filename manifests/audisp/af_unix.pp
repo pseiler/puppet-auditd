@@ -6,6 +6,6 @@ class auditd::audisp::af_unix (
     path    => 'builtin_af_unix',
     type    => 'builtin',
     args    => $args,
-    require => Package['auditd'],
+    require => Package[$auditd::params::audisp_package],
   }
 }

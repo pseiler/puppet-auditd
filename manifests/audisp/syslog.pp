@@ -4,10 +4,13 @@ class auditd::audisp::syslog (
   $args = 'LOG_INFO',
 
 ) {
+
+  stdlib::ensure_packages($auditd::audisp_package)
+
   auditd::audisp::plugin { 'syslog':
     path    => $path,
     type    => $type,
     args    => $args,
-    require => Package['auditd'],
+    require => Package[$auditd::audisp_package],
   }
 }

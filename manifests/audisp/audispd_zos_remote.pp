@@ -1,9 +1,5 @@
 class auditd::audisp::audispd_zos_remote {
-  if ! defined(Package[$auditd::params::audisp_package]) {
-    package { $auditd::params::audisp_package:
-      ensure => 'present',
-    }
-  }
+  stdlib::ensure_packages($auditd::params::audisp_package)
 
   auditd::audisp::plugin { 'audispd-zos-remote':
     path    => '/sbin/audispd-zos-remote',

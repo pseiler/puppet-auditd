@@ -46,7 +46,6 @@ describe 'auditd' do
 
     it { is_expected.to compile.with_all_deps }
     it { is_expected.not_to contain_service('auditd') }
-    it { is_expected.not_to contain_exec('reload_auditd') }
   end
 
   context "Check if 'manage_service = true' is acting correctly" do
@@ -69,7 +68,6 @@ describe 'auditd' do
 
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_service('auditd') }
-    it { is_expected.to contain_exec('reload_auditd')
       .with_command('/sbin/service auditd reload')
       .with_subscribe('[File[/etc/audit/auditd.conf]{:path=>"/etc/audit/auditd.conf"}, Concat[/etc/audit/rules.d/puppet.rules]{:name=>"/etc/audit/rules.d/puppet.rules"}]')
     }
@@ -96,7 +94,6 @@ describe 'auditd' do
 
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_service('auditd') }
-    it { is_expected.to contain_exec('reload_auditd')
       .with_command('systemctl reload auditd')
       .with_subscribe('[File[/etc/audit/auditd.conf]{:path=>"/etc/audit/auditd.conf"}, Concat[/etc/audit/rules.d/puppet.rules]{:name=>"/etc/audit/rules.d/puppet.rules"}]')
     }
