@@ -319,6 +319,13 @@
 # [*continue_loading*]
 #   Wether or not parsing the rules should stop when an error occurs.
 #
+# [*ignore_errors*]
+#   When  given by itself, ignore errors when reading rules from a file. This causes auditctl to always return a success exit code. If passed as an argument to -s then it gives an interpretation of the numbers to human readable
+#              words if possible.
+#
+# [*generate_rules*]
+#   Generate rules from files.
+#
 # === Examples
 #
 #  class { 'auditd':
@@ -371,6 +378,8 @@ class auditd (
   String $krb5_principal                                                             = 'auditd',
   Optional[String] $krb5_key_file                                                    = undef,
   Boolean $continue_loading                                                          = false,
+  Boolean $ignore_errors                                                             = false,
+  Boolean $generate_rules                                                            = false,
 
   # Variables for Audit files
   String $rules_file                    = $auditd::params::rules_file,
@@ -482,7 +491,11 @@ class auditd (
   # Manage the service
   if $manage_service {
     if $facts['os']['family'] =~ 'RedHat' {
-      $redhat_args = { 'restart' => 'service auditd restart',  'start' => 'service auditd start', 'status' => 'service auditd status', 'stop' => 'service auditd stop'}
+      $redhat_args = {
+        'restart' => 'service auditd restart',
+        'start'   => 'service auditd start',
+        'status'  => 'service auditd status',
+        'stop'    => 'service auditd stop'}
     }
     else {
       $redhat_args = {}
@@ -493,5 +506,15 @@ class auditd (
       hasstatus => true,
       *         => $redhat_args,
     }
+  }
+  if $generate_rules {
+      exec { 'generate_rules':
+        command     => 'augenrules --load',
+        path        => ['/sbin','/bin','/usr/sbin','/usr/bin'],
+        refreshonly => true,
+        subscribe   => [
+          Concat[$rules_file],
+        ],
+      }
   }
 }
