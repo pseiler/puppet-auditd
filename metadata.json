@@ -1,6 +1,6 @@
 {
   "name": "pseiler-auditd",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "author": "Danny Roberts, Philipp Seiler",
   "summary": "Manage the audit daemon and it's rules.",
   "license": "BSD-2-Clause",
