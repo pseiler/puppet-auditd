@@ -504,6 +504,7 @@ class auditd (
       ensure    => $service_ensure,
       enable    => $service_enable,
       hasstatus => true,
+      subscribe => File['/etc/audit/auditd.conf'],
       *         => $redhat_args,
     }
   }
